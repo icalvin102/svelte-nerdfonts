@@ -1,0 +1,19 @@
+{
+  "name": "svelte-nerdfonts",
+  "version": "0.0.3",
+  "description": "Use all nerdfont-icons in your Svelte project",
+  "main": "components/index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "clean": "rm -rf icons",
+    "generate": "python nerdconvert.py -o es icons --fields iconname viewbox paths"
+  },
+  "keywords": [
+    "nerdfonts",
+    "icons",
+    "svelte"
+  ],
+  "author": "icalvin102",
+  "license": "MIT"
+}
