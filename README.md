@@ -43,23 +43,21 @@ import { linuxArchlinux } from 'svelte-nerdfonts/icons';
 
 ### Supported Iconsets
 
-```
-'svelte-nerdfonts/icons'
-'svelte-nerdfonts/icons/custom'
-'svelte-nerdfonts/icons/dev'
-'svelte-nerdfonts/icons/fa'
-'svelte-nerdfonts/icons/fae'
-'svelte-nerdfonts/icons/iec'
-'svelte-nerdfonts/icons/indentation'
-'svelte-nerdfonts/icons/linux'
-'svelte-nerdfonts/icons/mdi'
-'svelte-nerdfonts/icons/oct'
-'svelte-nerdfonts/icons/pl'
-'svelte-nerdfonts/icons/ple'
-'svelte-nerdfonts/icons/pom'
-'svelte-nerdfonts/icons/seti'
-'svelte-nerdfonts/icons/weather'
-```
+* `svelte-nerdfonts/icons` all icons (prefixed)
+* `svelte-nerdfonts/icons/custom` Custom
+* `svelte-nerdfonts/icons/dev` Devicons
+* `svelte-nerdfonts/icons/fa` Font Awesome
+* `svelte-nerdfonts/icons/fae` Font Awesome Extension
+* `svelte-nerdfonts/icons/iec` IEC Power Symbols
+* `svelte-nerdfonts/icons/indentation`
+* `svelte-nerdfonts/icons/linux` Font Linux
+* `svelte-nerdfonts/icons/mdi` Material Design
+* `svelte-nerdfonts/icons/oct` Octicons
+* `svelte-nerdfonts/icons/pl` Powerline Symbols
+* `svelte-nerdfonts/icons/ple` PowerLine Extra Symbols
+* `svelte-nerdfonts/icons/pom` Pomicons
+* `svelte-nerdfonts/icons/seti` Seti UI
+* `svelte-nerdfonts/icons/weather` Weather Icons
 
 
 # Build
