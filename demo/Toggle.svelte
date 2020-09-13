@@ -1,13 +1,13 @@
 <script>
     import Icon from '../components';
-    import { faToggleOn, faToggleOff } from '../icons';
+    import { toggleOn, toggleOff } from '../icons/fa';
 
     export let value = false;
 </script>
 
 <p class="toggle"
         on:click="{() => value = !value}">
-    <Icon data="{value ? faToggleOn : faToggleOff}" />
+    <Icon data="{value ? toggleOn : toggleOff}" />
     <slot />
 </p>
 

@@ -2,4 +2,5 @@ icons
 
 /node_modules/
 /demo/public/*.map
+package-lock.json
 .DS_Store

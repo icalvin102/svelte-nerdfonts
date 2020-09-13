@@ -312,6 +312,8 @@ def export_es(filepath, data, record_formatter):
         export_es_index_single(base_dir, file_path, main_module_name)
         
         group_module_name = to_camel_case(record['iconname'])
+        if re.match(r'^[^a-z]', group_module_name):
+            group_module_name = main_module_name
         group_base_dir = os.path.dirname(file_path)
         export_es_index_single(group_base_dir, file_path, group_module_name)
         

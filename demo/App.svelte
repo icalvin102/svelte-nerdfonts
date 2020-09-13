@@ -21,6 +21,14 @@
         </Toggle>
         <ImportCode icons="{selectedIcons}"
                     group={groupByIconset} />
+        <footer>
+            <a href='https://www.npmjs.com/package/svelte-nerdfonts'>
+                <Icon data="{icons.devNpm}" />
+            </a>
+            <a href='https://www.npmjs.com/package/svelte-nerdfonts'>
+                <Icon data="{icons.devGithubFull}" />
+            </a>
+        </footer>
     </section>
 </main>
 
@@ -28,6 +36,7 @@
 
 <script>
     import * as icons from '../icons';
+    import Icon from '../components';
     import ImportCode from './ImportCode.svelte';
     import IconButton from './IconButton.svelte';
     import Toggle from './Toggle.svelte';    
@@ -37,6 +46,7 @@
             v.group = k.match(/^[a-z]*/)[0];
             v.name = k.replace(new RegExp(v.group), '');
             v.name = v.name.replace(/^\w/, (m) => m.toLowerCase());
+            v.name = v.name.match(/^[a-z]/) ? v.name : k;
             v.fullname = k;
             v.selected = false;
             return v;
@@ -119,5 +129,12 @@
 
     .search {
         width: 100%;
+    }
+    footer {
+        position: absolute;
+        width: 100%;
+        top: calc(100% - 2em);
+        font-size: 3em;
+        text-align: center;
     }
 </style>
