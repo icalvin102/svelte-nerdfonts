@@ -1,10 +1,12 @@
 <script>
-    
+    import { clippy } from '../icons/oct';
+    import Icon from '../components';
     export let icons = [];
     export let field = 'fullname';
     export let group = false;
 
     let codeBlock;
+    let importCode = '';
 
     function createImport(icons, field='fullname', groupname){
         let whitespace = icons.length > 0 ? '\n' : ' ';
@@ -13,16 +15,16 @@
         let names = icons.map(i => tab + i[field]);
         
         let output = [
-            `<span class="kw">import</span> {`,
+            `import {`,
             `${whitespace}${names.join(seperator)}${whitespace}`,
             `}`,
-            ` <span class="kw">from</span> `,
-            `'<span class="s">svelte-nerdfonts/icons`,
-            `${ groupname ? '/'+groupname : ''}'</span>`
+            ` from `,
+            `'svelte-nerdfonts/icons`,
+            `${ groupname ? '/'+groupname : ''}';`
         ]
         return output.join('');
     }
-
+    
     function createGroupedImport(icons){
         let grouped = icons.reduce((a, v) => {
             a[v.group] = [...(a[v.group] || []), v];
@@ -33,22 +35,43 @@
             .map(([k, v]) => createImport(v, 'name', k))
             .join('\n');
     }
-        
+
+    function syntax(codeString){
+        return codeString
+            .replace(/(import|from)/g, '<span class="kw">$1</span>')
+            .replace(/('.*?')/g, '<span class="s">$1</span>')
+    }
+
+    function copyToClipboard(){
+        codeBlock.select();
+        document.execCommand('copy');
+        console.log(codeBlock.value);
+    }
+
+    $: {
+        if(group){
+            importCode = createGroupedImport(icons);
+        } else {
+            importCode = createImport(icons, field);
+        }
+    }
+
 </script>
 
-<pre bind:this="{codeBlock}">
-{#if group}
-{@html createGroupedImport(icons)}
+{#if icons.length > 0}
+    <pre>
+        {@html syntax(importCode) }
+    </pre>
+
+    <button on:click="{copyToClipboard}">
+        <Icon data="{clippy}" /> Copy to Clipboard
+    </button>
 {:else}
-{@html createImport(icons, field) }
+    No icons selected
 {/if}
-</pre>
+<textarea readonly bind:this="{codeBlock}">{importCode}</textarea>
 
 <style>
-    pre {
-        background: #eee;
-        padding: 1em;
-    }
 
     :global(.kw) {
         color: red;
@@ -56,5 +79,10 @@
     
     :global(.s) {
         color: blue;
+    }
+
+    textarea {
+        position: absolute;
+        left: -9999px;
     }
 </style>

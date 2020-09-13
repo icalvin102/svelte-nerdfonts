@@ -23,6 +23,9 @@ Run:
 
 ```
 
+> (See [cheatsheet](https://icalvin102.github.io/svelte-nerdfonts/)
+> to find the icons you are looking for)
+
 ## Icons
 
 Icons can be imported directly from an Iconset or from a combined

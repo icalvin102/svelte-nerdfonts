@@ -1,5 +1,5 @@
 icons
 
 /node_modules/
-
+/demo/public/*.map
 .DS_Store

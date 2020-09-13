@@ -1,46 +1,54 @@
-<input type="text" bind:value="{query}"/>
-<button on:click="{()=>showLabels = !showLabels}">
-    { showLabels ? 'Hide' : 'Show' } Labels
-</button>
 <main>
-    
     <section class="icons" class:showlabels="{showLabels}">
-        {#each Object.entries(groupIcons(displayIcons)) as [group, icons]}
-            <div>{group}</div>
-            {#each icons as icon} 
-                <button class="iconbutton" on:click="{ () => toggle(icon) }">
-                <Icon data="{icon}" />
-                <div class="name">{ icon.name }</div>
-                <div class="group">{ icon.group }</div>
-            </button>
+        <h1>svelte-nerdfonts cheatsheet</h1>
+        {#each Object.entries(groupIcons(displayIcons)) as [group, icons] (group)}
+            <h3>{group}</h3>
+            {#each icons as icon (icon.fullname) } 
+                <IconButton {icon} on:click="{ () => toggle(icon) }" />
             {/each}
         {/each}
     </section>
 
-    <section class="code">
-        <ImportCode icons="{selectedIcons}" group />
-        <ImportCode icons="{selectedIcons}" />
+    <section class="sidebar">
+        <input type="text" class="search"
+               bind:value="{query}"
+                placeholder="Search eg. toggle, javascript, vim..." />
+        <Toggle bind:value="{showLabels}">
+            Show Labels
+        </Toggle>
+        <Toggle bind:value="{groupByIconset}">
+            Group imports by iconset
+        </Toggle>
+        <ImportCode icons="{selectedIcons}"
+                    group={groupByIconset} />
     </section>
 </main>
 
+<svelte:window on:scroll="{ checkBottom }" />
+
 <script>
-    import Icon from '../components';
     import * as icons from '../icons';
     import ImportCode from './ImportCode.svelte';
-    
+    import IconButton from './IconButton.svelte';
+    import Toggle from './Toggle.svelte';    
+
     let iconList = Object.entries(icons)
         .map(([k, v]) => {
-            v.group = k.split(/[A-Z]/)[0];
+            v.group = k.match(/^[a-z]*/)[0];
             v.name = k.replace(new RegExp(v.group), '');
             v.name = v.name.replace(/^\w/, (m) => m.toLowerCase());
             v.fullname = k;
+            v.selected = false;
             return v;
         });
 
     let query = '';
     let displayIcons = [];
+    let filteredIcons = [];
     let selectedIcons = [];
-    let showLabels = true;
+    let iconCount = 100;
+    let showLabels = false;
+    let groupByIconset = true;
 
 
     $: {
@@ -48,22 +56,30 @@
         search();
     }
 
+    $: {
+        displayIcons = filteredIcons.slice(0, iconCount);
+    }
+
     function search(){
-        displayIcons = iconList.filter(icon =>
+        filteredIcons = iconList.filter(icon =>
             icon.fullname.toLowerCase().includes(query)
-        )//.slice(0, 50); 
+        );
+        iconCount = 100;
     }
     
 
     function toggle(icon){
+        console.log(icon)
         let index = selectedIcons.indexOf(icon);
         if(index >= 0){
+            icon.selected = false;
             selectedIcons.splice(index, 1);
             selectedIcons = selectedIcons;
         } else {
+            icon.selected = true;
             selectedIcons = [...selectedIcons, icon]
         }
-
+        displayIcons = displayIcons;
     }
     
     function groupIcons(icons){
@@ -73,47 +89,35 @@
         }, {});
     }
 
+    function checkBottom(){
+        let d = document.body.scrollHeight
+            - window.scrollY
+            - window.innerHeight;
+
+        if(d < 200) {
+            iconCount = iconCount+50;
+        }
+    }
+
 </script>
 
 <style>
-    main {
-        display: grid;
-        grid-template-columns: 1fr 350px;
+    section.sidebar {
+        position: fixed;
+        width: 350px;
+        height: 100vh;
+        right: 0;
+        top: 0;
+        padding: 1em;
+        background-color: #eee;
     }
 
-    .iconbutton {
-        width: 2em;
-        margin: 5px;
-        font-size: 2em;
+    section.icons {
+        position: relative;
+        width: calc(100% - (350px + 2em));
     }
 
-    .showlabels .iconbutton {
-        width: 4em;
-    }
-
-
-    .name, .group {
-        display: none;
-    }
-
-    .showlabels .name,
-    .showlabels .group {
-        display: block;
-    }
-
-    .name {
-        margin-top: 10px;
-        font-size: 14px;
-    }
-
-    .group {
-        font-size: 10px;
-        font-style: italic;
-    }
-
-    section.code {
-        display: grid;
-        grid-template-columns: 1fr;
-        grid-gap: 1em;
+    .search {
+        width: 100%;
     }
 </style>
