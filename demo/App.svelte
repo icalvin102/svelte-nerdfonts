@@ -1,20 +1,32 @@
 <input type="text" bind:value="{query}"/>
+<button on:click="{()=>showLabels = !showLabels}">
+    { showLabels ? 'Hide' : 'Show' } Labels
+</button>
 <main>
-    {#each displayIcons as [key, value]}
-        <button class="red" on:click="{ () => toggle(value) }">
-        <Icon data="{value}" />
-        <div class="name">{ value.name }</div>
-        <div class="group">{ value.group }</div>
-    </button>
-    {/each}
     
-    <pre>{ groupedImports }</pre>
-    <pre>{ combinedImports }</pre>
+    <section class="icons" class:showlabels="{showLabels}">
+        {#each Object.entries(groupIcons(displayIcons)) as [group, icons]}
+            <div>{group}</div>
+            {#each icons as icon} 
+                <button class="iconbutton" on:click="{ () => toggle(icon) }">
+                <Icon data="{icon}" />
+                <div class="name">{ icon.name }</div>
+                <div class="group">{ icon.group }</div>
+            </button>
+            {/each}
+        {/each}
+    </section>
+
+    <section class="code">
+        <ImportCode icons="{selectedIcons}" group />
+        <ImportCode icons="{selectedIcons}" />
+    </section>
 </main>
 
 <script>
     import Icon from '../components';
     import * as icons from '../icons';
+    import ImportCode from './ImportCode.svelte';
     
     let iconList = Object.entries(icons)
         .map(([k, v]) => {
@@ -22,14 +34,13 @@
             v.name = k.replace(new RegExp(v.group), '');
             v.name = v.name.replace(/^\w/, (m) => m.toLowerCase());
             v.fullname = k;
-            return [k, v];
+            return v;
         });
 
     let query = '';
     let displayIcons = [];
     let selectedIcons = [];
-    let groupedImports = '';
-    let combinedImports = '';
+    let showLabels = true;
 
 
     $: {
@@ -38,21 +49,11 @@
     }
 
     function search(){
-        displayIcons = iconList.filter(([key, value]) =>
-            key.toLowerCase().includes(query)
-        ).slice(0, 50); 
+        displayIcons = iconList.filter(icon =>
+            icon.fullname.toLowerCase().includes(query)
+        )//.slice(0, 50); 
     }
     
-    function createImport(icons, field='fullname', group){
-        let whitespace = icons.length > 2 ? '\n' : ' ';
-        let tab = icons.length > 2 ? '    ' : '';
-        let seperator = ',' + whitespace;
-        let names = icons.map(i => tab + i[field]);
-        
-        let output = `import {${whitespace}${names.join(seperator)}${whitespace}}`;
-        output += ` from 'svelte-nerdfonts/icons${ group ? '/'+group : ''}';`
-        return output;
-    }
 
     function toggle(icon){
         let index = selectedIcons.indexOf(icon);
@@ -63,43 +64,56 @@
             selectedIcons = [...selectedIcons, icon]
         }
 
-        let grouped = selectedIcons.reduce((a, v) => {
+    }
+    
+    function groupIcons(icons){
+        return icons.reduce((a, v) => {
             a[v.group] = [...(a[v.group] || []), v];
             return a;
         }, {});
-
-        groupedImports = Object.entries(grouped)
-            .map(([k, v]) => createImport(v, 'name', k))
-            .join('\n');
-        
-        combinedImports = createImport(selectedIcons);
-
-        console.log(groupedImports);
-        console.log(combinedImports);
     }
 
 </script>
 
 <style>
-    button {
-        width: 7em;
-        margin: 5px;
+    main {
+        display: grid;
+        grid-template-columns: 1fr 350px;
     }
 
-    button :global(.icon) {
-        display: inline-block;
-        width: 3em;
-        height: 3em;
+    .iconbutton {
+        width: 2em;
+        margin: 5px;
+        font-size: 2em;
+    }
+
+    .showlabels .iconbutton {
+        width: 4em;
+    }
+
+
+    .name, .group {
+        display: none;
+    }
+
+    .showlabels .name,
+    .showlabels .group {
+        display: block;
     }
 
     .name {
-        margin-top: .5em;
+        margin-top: 10px;
         font-size: 14px;
     }
 
     .group {
-        font-size: .7em;
+        font-size: 10px;
         font-style: italic;
     }
 
+    section.code {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-gap: 1em;
+    }
 </style>
