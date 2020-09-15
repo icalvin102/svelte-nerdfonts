@@ -87,7 +87,7 @@ function! s:join_lines(lines)
     return join(a:lines, "\n") 
 endfunction
 
-let snf_sed = 'sed -e ''s/export/import/'' -e ''s/.\//svelte-nerdfonts\/icons\//''' 
+let snf_sed = 'sed -e ''s/export/import/'' -e ''s/\.\//svelte-nerdfonts\/icons\//''' 
 let snf_path = '"$(git rev-parse --show-toplevel)/node_modules/svelte-nerdfonts/icons/index.js"'
 inoremap <expr> <c-x>i fzf#vim#complete({
     \ 'source': snf_sed . ' ' . snf_path,
