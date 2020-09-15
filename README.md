@@ -82,17 +82,28 @@ you can add the following lines to your `.vimrc` to get
 a list of all availible icon imports. 
 
 ``` vim
-" svelte-nerdfonts fzf completion
-function! s:join_lines(lines)
-    return join(a:lines, "\n") 
+" svelte-nerdfonts fzf.vim completion
+
+function! s:snf_format(key, value)
+    let l:values = split(trim(a:value), '\s\+')
+    return 'import { default as '. l:values[0] .' } from
+        \ ''svelte-nerdfonts/icons/'. l:values[2] . '''; // ' . l:values[1]
 endfunction
 
-let snf_sed = 'sed -e ''s/export/import/'' -e ''s/\.\//svelte-nerdfonts\/icons\//''' 
+function! s:snf_join_lines(lines)
+    return join(map(a:lines, function('<sid>snf_format')), "\n") 
+endfunction
+
+let snf_awk = 'awk ''{match($0, /\*(.*)\*/, g);
+    \ match($0, / as ([^ ]*) /, n);
+    \ match($0, /\x27\.\/(.*)\x27/, p);
+    \ printf "%40s %s %s\n",n[1],g[1],p[1]}'''
 let snf_path = '"$(git rev-parse --show-toplevel)/node_modules/svelte-nerdfonts/icons/index.js"'
 inoremap <expr> <c-x>i fzf#vim#complete({
-    \ 'source': snf_sed . ' ' . snf_path,
-    \ 'reducer': function('<sid>join_lines'),
+    \ 'source': snf_awk . ' ' . snf_path,
+    \ 'reducer': function('<sid>snf_join_lines'),
     \ 'options': '--multi'})
+
 ```
 
 Press `<c-x>i` in `Insert Mode` to open a fzf window with the possible
