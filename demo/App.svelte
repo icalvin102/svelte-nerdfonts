@@ -7,32 +7,49 @@
                 <IconButton {icon} on:click="{ () => toggle(icon) }" />
             {/each}
         {/each}
+        {#if iconCount <= filteredIcons.length }
+            <button on:click="{showAll}" class="showall">
+                Show all {filteredIcons.length} results
+            </button>
+        {/if}
     </section>
 
     <section class="sidebar">
-        <input type="text" class="search"
-               bind:value="{query}"
-                placeholder="Search eg. toggle, javascript, vim..." />
-        <Toggle bind:value="{showLabels}">
-            Show Labels
-        </Toggle>
-        <Toggle bind:value="{groupByIconset}">
-            Group imports by iconset
-        </Toggle>
+        <div class="searchoptions">
+            <input type="text" class="search"
+                    on:input="{search}"
+                    bind:value="{query}"
+                    placeholder="Search eg. toggle, javascript, vim..." />
+            
+            <Toggle bind:value="{showLabels}">
+                Show Labels
+            </Toggle>
+            <Toggle bind:value="{groupByIconset}">
+                Group imports by iconset
+            </Toggle>
+        </div>
+
+        <div class="selectedicons">
+            <h4>Selected Icons</h4>
+            {#each selectedIcons as icon (icon.fullname) } 
+                <IconButton {icon} on:click="{ () => toggle(icon) }" />
+            {:else}
+                No Icons selected
+            {/each}
+        </div>
+
         <ImportCode icons="{selectedIcons}"
                     group={groupByIconset} />
         <footer>
-            <a href='https://www.npmjs.com/package/svelte-nerdfonts'>
+            <a href="https://www.npmjs.com/package/svelte-nerdfonts">
                 <Icon data="{icons.devNpm}" />
             </a>
-            <a href='https://www.npmjs.com/package/svelte-nerdfonts'>
+            <a href="https://github.com/icalvin102/svelte-nerdfonts">
                 <Icon data="{icons.devGithubFull}" />
             </a>
         </footer>
     </section>
 </main>
-
-<svelte:window on:scroll="{ checkBottom }" />
 
 <script>
     import * as icons from '../icons';
@@ -40,6 +57,7 @@
     import ImportCode from './ImportCode.svelte';
     import IconButton from './IconButton.svelte';
     import Toggle from './Toggle.svelte';    
+    import { afterUpdate, tick } from 'svelte';
 
     let iconList = Object.entries(icons)
         .map(([k, v]) => {
@@ -59,12 +77,6 @@
     let iconCount = 100;
     let showLabels = false;
     let groupByIconset = true;
-
-
-    $: {
-        query;
-        search();
-    }
 
     $: {
         displayIcons = filteredIcons.slice(0, iconCount);
@@ -99,16 +111,11 @@
         }, {});
     }
 
-    function checkBottom(){
-        let d = document.body.scrollHeight
-            - window.scrollY
-            - window.innerHeight;
-
-        if(d < 200) {
-            iconCount = iconCount+50;
-        }
+    function showAll(){
+        iconCount = filteredIcons.length;
     }
 
+    search();
 </script>
 
 <style>
@@ -137,4 +144,14 @@
         font-size: 3em;
         text-align: center;
     }
+
+    .showall {
+        display: block;
+        margin: 1em auto;
+    }
+    
+    section.sidebar :global(.iconbutton) {
+        font-size: 1em;
+    }
+
 </style>

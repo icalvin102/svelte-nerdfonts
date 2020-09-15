@@ -66,10 +66,8 @@
     <button on:click="{copyToClipboard}">
         <Icon data="{clippy}" /> Copy to Clipboard
     </button>
-{:else}
-    No icons selected
+    <textarea readonly bind:this="{codeBlock}">{importCode}</textarea>
 {/if}
-<textarea readonly bind:this="{codeBlock}">{importCode}</textarea>
 
 <style>
 

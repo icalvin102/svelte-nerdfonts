@@ -9,6 +9,7 @@
   "scripts": {
     "clean": "rm -rf icons",
     "generate": "python nerdconvert.py -o es icons --fields iconname viewbox paths",
+    "install": "curl -O https://raw.githubusercontent.com/icalvin102/nerdconvert/master/nerdconvert.py",
     "build": "rollup -c demo/rollup.config.js",
     "dev": "rollup -c -w",
     "start": "sirv public"

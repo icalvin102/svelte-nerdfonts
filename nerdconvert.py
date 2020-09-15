@@ -285,12 +285,13 @@ def export_es_single(filepath, record, record_formatter):
     return (filepath, record)
 
 
-def export_es_index_single(base_dir, module_filepath, name):
+def export_es_index_single(base_dir, module_filepath, name, record):
     import_path = os.path.relpath(module_filepath, start=base_dir)
     import_path = os.path.join('.', import_path)
     index_path = os.path.join(base_dir, 'index.js')
 
-    content = 'export { default as '+name+' } from \''+ import_path +'\';\n'
+    content = '/* '+record['glyph']+' */ export { default as '+name+' } '
+    content += 'from \''+ import_path.replace('.js', '') +'\';\n'
 
     with open(index_path, 'a', encoding='utf-8') as f:
         f.write(content)
@@ -309,13 +310,13 @@ def export_es(filepath, data, record_formatter):
 
     for (file_path, record) in files:
         main_module_name = to_camel_case(record['name'])
-        export_es_index_single(base_dir, file_path, main_module_name)
+        export_es_index_single(base_dir, file_path, main_module_name, record)
         
         group_module_name = to_camel_case(record['iconname'])
         if re.match(r'^[^a-z]', group_module_name):
             group_module_name = main_module_name
         group_base_dir = os.path.dirname(file_path)
-        export_es_index_single(group_base_dir, file_path, group_module_name)
+        export_es_index_single(group_base_dir, file_path, group_module_name, record)
         
     return data
 

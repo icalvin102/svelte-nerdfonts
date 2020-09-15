@@ -13,10 +13,17 @@
 
 <style>
     .iconbutton {
+        position: relative;
         width: 2em;
         margin-right: 5px;
         margin-bottom: 5px;
         font-size: 2em;
+        z-index: 0;
+    }
+
+    .iconbutton:hover {
+        transform: scale(2);
+        z-index: 100;
     }
 
     :global(.showlabels) .iconbutton {
