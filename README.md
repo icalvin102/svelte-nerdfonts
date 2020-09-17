@@ -75,48 +75,38 @@ import { linuxArchlinux } from 'svelte-nerdfonts/icons';
 
 ### fzf.vim completion
 
+![](https://raw.githubusercontent.com/icalvin102/svelte-nerdfonts/master/demo/public/svelte_nerdfont_vim_fzf.gif)
 
-If you are using vim/neovim with the
-[fzf.vim](https://github.com/junegunn/fzf.vim) plugin 
-you can add the following lines to your `.vimrc` to get
-a list of all availible icon imports. 
+If you are using vim/neovim with 
+[fzf.vim](https://github.com/junegunn/fzf.vim)
+you can install the `svelte_nerdfonts.vim` plugin 
+to find, import and add icons more efficently.
+
+Install with [vim-plug](https://github.com/junegunn/vim-plug)
 
 ``` vim
-" svelte-nerdfonts fzf.vim completion
-
-function! s:snf_format(key, value)
-    let l:values = split(trim(a:value), '\s\+')
-    return 'import { default as '. l:values[0] .' } from
-        \ ''svelte-nerdfonts/icons/'. l:values[2] . '''; // ' . l:values[1]
-endfunction
-
-function! s:snf_join_lines(lines)
-    return join(map(a:lines, function('<sid>snf_format')), "\n") 
-endfunction
-
-let snf_awk = 'awk ''{match($0, /\*(.*)\*/, g);
-    \ match($0, / as ([^ ]*) /, n);
-    \ match($0, /\x27\.\/(.*)\x27/, p);
-    \ printf "%40s %s %s\n",n[1],g[1],p[1]}'''
-let snf_path = '"$(git rev-parse --show-toplevel)/node_modules/svelte-nerdfonts/icons/index.js"'
-inoremap <expr> <c-x>i fzf#vim#complete({
-    \ 'source': snf_awk . ' ' . snf_path,
-    \ 'reducer': function('<sid>snf_join_lines'),
-    \ 'options': '--multi'})
+Plug 'icalvin102/svelte-nerdfonts', { 'rtp': 'vim' }
 
 ```
 
-Press `<c-x>i` in `Insert Mode` to open a fzf window with the possible
-icon imports. Select multiple icons with `Tab` or `Shift+Tab` and 
-confim with `Enter` to insert the selected imports into you buffer.
+Or install the `vim` directory manually.
 
-> Note: Your svelte project has to be a initialized git repository
-> for this to work. 
+The plugin will give you the `:SNFAddImport` and `:SNFAddIcon`
+commands which are mapped to `<leader>si` and `<leader>sI` by default.
 
-> Note: Install a nerd-font for icon-previews in the fzf output 
+* `:SNFAddImport` Find icons and add ESM import statements.
+* `:SNFAddIcon` Search through imported icons and add `Icon` component
 
-> If you have any suggestions on making this more robust. 
-> Please share them :)
+Multiple selection is possible with `Tab` (select down)
+and `Shift+Tab` (select up). Press `Enter` to confirm and insert
+the selected icons into your buffer.
+
+> **Note**: Install a nerd-font for icon-previews in the fzf output 
+
+> **Note**: The Svelte project has to be a initialized git repository.
+**Or** the variable `g:svelte_nerdfonts_path` has to be set to
+`/pathtoyourproject/node_modules/svelte_nerdfonts` in order to make
+package files accessible to the plugin. 
 
 
 Build
