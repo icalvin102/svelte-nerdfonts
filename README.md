@@ -103,11 +103,6 @@ the selected icons into your buffer.
 
 > **Note**: Install a nerd-font for icon-previews in the fzf output 
 
-> **Note**: The Svelte project has to be a initialized git repository.
-**Or** the variable `g:svelte_nerdfonts_path` has to be set to
-`/pathtoyourproject/node_modules/svelte_nerdfonts` in order to make
-package files accessible to the plugin. 
-
 
 Build
 -----

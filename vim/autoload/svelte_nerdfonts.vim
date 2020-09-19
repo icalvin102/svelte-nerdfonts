@@ -14,32 +14,35 @@ endfunction
 
 
 function! svelte_nerdfonts#get_index_path()
+    let l:path = ''
     if exists('g:svelte_nerdfonts_path')
-        if filereadable(g:svelte_nerdfonts_path . '/icons/index.js')
-            return g:svelte_nerdfonts_path . '/icons/index.js'
+        let l:path = g:svelte_nerdfonts_path . '/icons/index.js'
+        if filereadable(l:path)
+            return l:path
         endif
+        echoe 'g:svelte_nerdfonts_path is set but '. l:path .' is not a file'
     endif
-    let l:base_path = systemlist('git rev-parse --show-toplevel')[0]
-    let l:file_path = '/node_modules/svelte-nerdfonts/icons/index.js'
-    if match(l:base_path, '\v^/') < 0
-        echoe 'No project base directory found.
-            \ Run "git init" in the project base directory
-            \ or set g:svelte_nerdfonts_path to
-            \ "node_modules/svelte-nerdfonts" of your installation'
-        return ''
-    else
-        if filereadable(l:base_path . l:file_path)
-            return l:base_path . l:file_path
-        else
-            echoe 'File "'. l:base_path . l:file_path .'" not readable'
-            return ''
-        endif
+
+    let l:cmd = 'node -e
+        \ ''console.log(require.resolve("svelte-nerdfonts/icons"))'''
+    let l:path = systemlist(l:cmd)
+
+    if v:shell_error == 0 && filereadable(l:path[0])
+        return l:path[0]
     endif
+    return ''
 endfunction
 
 
 function! svelte_nerdfonts#add_imports()
     let l:file_path = svelte_nerdfonts#get_index_path()
+    if len(l:file_path) == 0
+        echoe '"svelte-nerdfonts" module path not found.
+            \ Run "npm i svelte-nerdfonts"
+            \ and/or run vim from within the svelte project'
+        return
+    endif 
+
     let l:imports = readfile(l:file_path)
     let l:fzf_list = map(l:imports, {k,v -> s:import_to_fzf(v)})
     let l:cl = line('.')
