@@ -2,5 +2,6 @@ icons
 
 /node_modules/
 /demo/public/*.map
+nerdconvert.py
 package-lock.json
 .DS_Store

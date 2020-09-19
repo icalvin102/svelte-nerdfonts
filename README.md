@@ -5,6 +5,7 @@ Nerdfont SVG-Icons for Svelte.js
 
 ![](https://raw.githubusercontent.com/icalvin102/svelte-nerdfonts/master/demo/public/usage-general.gif)
 
+
 Install
 -------
 
@@ -54,6 +55,7 @@ import { linuxArchlinux } from 'svelte-nerdfonts/icons';
 > Note: The compiletime depends on the size of the imported iconset.
 > Example 1 will be fastest as it only has to import on iconfile.
 
+
 #### Supported Iconsets
 
 * `svelte-nerdfonts/icons` all icons (prefixed)
@@ -73,7 +75,9 @@ import { linuxArchlinux } from 'svelte-nerdfonts/icons';
 * `svelte-nerdfonts/icons/weather` Weather Icons
 
 
-### fzf.vim completion
+
+fzf.vim completion
+------------------
 
 ![](https://raw.githubusercontent.com/icalvin102/svelte-nerdfonts/master/demo/public/svelte_nerdfont_vim_fzf.gif)
 
@@ -107,15 +111,19 @@ the selected icons into your buffer.
 Build
 -----
 
+## Setup
 
 ``` bash
 $ git clone https://github.com/icalvin102/svelte-nerdfonts.git
 $ cd svelte-nerdfonts
+$ npm run setup
 ```
 
 svelte-nerdfonts uses [icalvin102/nerdconvert](https://github.com/icalvin102/nerdconvert)
 to generate the icons. This needs `python` and `fontforge` to be installed
 on your machine. 
+
+## Generate
 
 If the dependencies are installed you can simply run:
 
