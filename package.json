@@ -5,6 +5,7 @@
   "license": "MIT",
   "description": "Use all nerdfont-icons in your Svelte project",
   "main": "components/index.js",
+  "svelte": "components/index.js",
   "type": "module",
   "scripts": {
     "generate": "rm -rf icons; python nerdconvert.py -o es icons --fields iconname viewbox paths",
